@@ -8,18 +8,19 @@ define('UPLOAD_URL', 'http://manage.kienviet.net/upload/');
 define('SITE_PATH', '/var/www/manage.kienviet.net/');
 define('SITE_URL', 'http://manage.kienviet.net/');
 // URI, SEGS, SEGn
-$_REQUEST_URI = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
-define('URI', DIR == '/' ? $_REQUEST_URI : substr($_REQUEST_URI, strlen(trim(DIR, '/').'/')));
-$_URI_SEGMENTS = explode('/', URI);
-define('SEGS', empty($_URI_SEGMENTS) ? 0 : count($_URI_SEGMENTS));
+// $_REQUEST_URI = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+// define('URI', DIR == '/' ? $_REQUEST_URI : substr($_REQUEST_URI, strlen(trim(DIR, '/').'/')));
+// $_URI_SEGMENTS = explode('/', URI);
+// define('SEGS', empty($_URI_SEGMENTS) ? 0 : count($_URI_SEGMENTS));
 for ($i = 1; $i <= 9; $i ++)
 	define('SEG'.$i, isset($_URI_SEGMENTS[$i - 1]) ? $_URI_SEGMENTS[$i - 1] : '');
 
-
+Yii::setAlias('common', 'D:/wamp/www/appbasic/common/');
 return [
 	'brand_name'=>'Amica Travel',
 	'page_title'=>'',
 	'page_meta_title'=>'',
+    'common' => '@app',
 
 	'allLanguages'=>['en', 'vi', 'fr'],
 

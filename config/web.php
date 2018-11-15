@@ -16,6 +16,15 @@ $config = [
             Yii::$app->language = (Yii::$app->session->has('language'))? Yii::$app->session->get('language'): 'en';
     },
     'components' => [
+        'db' => require(__DIR__ . '/db.php'),
+
+        'queue' => [// full basic queue
+            'class' => \yii\queue\db\Queue::class,
+            'db' => 'db',
+            'tableName' => '{{queue}}', // Table name
+            'channel' => 'default', // Queue channel key
+            'mutex' => \yii\mutex\MysqlMutex::class, // Mutex used to sync queries
+        ],
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
         ],
@@ -58,7 +67,7 @@ $config = [
                 ],
             ],
         ],
-        'db' => require(__DIR__ . '/db.php'),
+
         'request' => [
             'enableCsrfValidation'=>false,
             'cookieValidationKey' => '5tWb^Y*N7ujm',
@@ -121,7 +130,7 @@ $config = [
                 'baseUrl' => '@web/../themes/mytheme',
             ],
         ],
-        'mail' => [
+        'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
             'viewPath'         => '@app/mail',
             'useFileTransport' => false,
@@ -129,38 +138,63 @@ $config = [
                 'class' => 'Swift_SmtpTransport',
                 'host' => 'smtp.gmail.com',
                 'username' => 'nguyen.nv@amica-travel.com',
-                'password' => 'pass',
+                'password' => 'app_gmail_9999',
                 'port' => '587',
                 'encryption' => 'tls',
             ],
         ],
-        'mailqueue' => array(
-            'class' => 'yiicod\mailqueue\MailQueue',
-            'modelMap' => array(
-                'MailQueue' => array(
-                    'alias' => 'yiicod\mailqueue\models\MailQueueModel',
-                    'class' => 'yiicod\mailqueue\models\MailQueueModel',
-                    'fieldFrom' => 'from',
-                    'fieldTo' => 'to',
-                    'fieldSubject' => 'subject',
-                    'fieldBody' => 'body',
-                    'fieldAttachs' => 'attachs',
-                    'fieldStatus' => 'status',
-                    'status' => array(
-                        'send' => 1,
-                        'unsend' => 0,
-                        'failed' => 0,
-                    )
-                )
-            ),
-            'mailer' => 'mail',
-            'components' => array(
-                'mailQueue' => array(
-                    'class' => 'yiicod\mailqueue\components\MailQueue',
-                    'afterSendDelete' => false,
-                ),
-            ),
-        ),
+        'mailqueue' => [
+            'class' => \yiicod\mailqueue\MailQueue::class,
+            'modelMap' => [
+                'mailQueue' => [
+                    'class' => \yiicod\mailqueue\models\MailQueueModel::class,
+                    // 'fieldFrom' => 'from',
+                    // 'fieldTo' => 'to',
+                    // 'fieldSubject' => 'subject',
+                    // 'fieldBody' => 'body',
+                    // 'fieldAttachs' => 'attachs',
+                    // 'fieldStatus' => 'status',
+                    // 'fieldPriority' => 'priority',
+                    // // 'fieldCreatedDate' => 'createDate',
+                    // // 'fieldUpdatedDate' => 'updateDate',
+                    // 'status' => [
+                    //     'send' => 1,
+                    //     'unsend' => 0,
+                    //     'failed' => 0,
+                    // ]
+                ],
+            ],
+            'commandMap' => [
+                'mail-queue' => [
+                    'class' => \yiicod\mailqueue\commands\WorkerCommand::class,
+                ],
+            ],
+        ],
+        'myNty' => [
+            'class' => 'app\notifications\MyNotification',
+        ]
+    ],
+    'modules' => [
+        'notifications' => [
+            'class' => 'webzop\notifications\Module',
+            'channels' => [
+                'screen' => [
+                    'class' => 'webzop\notifications\channels\ScreenChannel',
+                ],
+                'email' => [
+                    'class' => 'webzop\notifications\channels\EmailChannel',
+                    'message' => [
+                        'from' => 'example@email.com'//nguyen.nv@amica-travel.com
+                    ],
+                ],
+                // 'voice' => [
+                //     'class' => 'app\channels\VoiceChannel',
+                // ],
+            ],
+        ],
+        // 'admin' => [
+        //     'class' => 'app\modules\admin\Module',
+        // ],
     ],
     'params' => $params,
 

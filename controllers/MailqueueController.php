@@ -8,6 +8,7 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use \yiicod\mailqueue\models\MailQueueModel;
 
 /**
  * MailqueueController implements the CRUD actions for MailQueue model.
@@ -36,11 +37,9 @@ class MailqueueController extends Controller
      */
     public function actionCreate()
     {
-        // var_dump(Yii::$app->mailqueue->components['mailQueue']['class']);
-        $table = Yii::$app->get('mailqueue')->components['mailQueue']['class'];
-        // var_dump($table); die();
-        $model = new $table();
-        var_dump($model); die();
+        $model = new MailQueueModel;
+
+        // var_dump($model); die();
         // $criteria = [
         //         'where' => 'status=:status',
         //         'params' => ['status' => 0],
@@ -48,23 +47,23 @@ class MailqueueController extends Controller
         //         'limit' => 60
         // ];
          $data =[
-                [
+                // [
                     'from' => 'vannguyen832@gmail.com',
                     'to' => 'nguyenvn099@gmail.com',
                     'subject' => 'abc',
                     'body' => 'abcd',
                     'attachs' => [],
-                    'status' => 0
-                ],
-                [
-                    'from' =>'vannguyen832@gmail.com',
-                    'to' =>'nguyen.nv@amicatravel.com',
-                    'subject'=> 'test',
-                    'body'=> 'test content',
-                    'attachs' => [],
-                    'status' => 0
-                ]
+                    'status' => 0,
+                    'priority' => 0
+                // ],
             ];
-        $model->pushMass($data);
+
+        $model->attributes = $data;
+        $model->createDate = NOW;
+        $model->updateDate = NOW;
+        if (!$model->push($data)) {
+            var_dump($model->errors);die();
+        }
+
     }
 }

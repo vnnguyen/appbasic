@@ -8,12 +8,13 @@ use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
+use app\notifications\widgets\MyNotifications;
 
 AppAsset::register($this);
 $session = Yii::$app->session;
 if ($session->has('language')) {
     Yii::$app->language = $session->get('language');
-} 
+}
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -25,25 +26,32 @@ if ($session->has('language')) {
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900">
-    <?php 
+    <?php
     //.modal-body{ height: 135px; padding:0}
         $this->registerCss('
              .modal-dialog{ margin: 5% auto; }
              .modal-content{ border-radius: 10px; }
              .modal-content .div-title{ display: inline-block; width: 100%; margin-bottom: 5px; background: #37474F;  padding: 6px; padding-right: 15px; border-radius: 7px 7px 0 0; color: #fff}
              .modal-content .div-title span{ font-size: 16px; font-weight:500}
-             
+
              .p-content{ padding-top: 5%; font-size: 15px; }
              .modal-footer .confirm-ok{ padding: 7px 20px;}
              .modal-body .div-content .glyphicon-floppy-remove{ font-size: 32px; position: absolute; left: 15%; top: 44%; }
              .btn-default:hover{background: #ccc;}
+
         ');
     ?>
-    <?php $this->registerJsFile(Yii::$app->request->baseUrl.'/js/modal_confirm.js', ['depends' => [\yii\web\JqueryAsset::className()]]); 
+    <?php $this->registerJsFile(Yii::$app->request->baseUrl.'/js/modal_confirm.js', ['depends' => [\yii\web\JqueryAsset::className()]]);
+
         //$this->registerCssFile("http://example.com/css/themes/black-and-white.css", [
     //'depends' => [BootstrapAsset::className()],
     //'media' => 'print',
     //], 'css-print-theme');
+    ?>
+    <?php
+    $this->registerCss('
+        .nav-notifications .dropdown-menu { min-width: 350px}
+    ');
     ?>
 </head>
 
@@ -70,7 +78,7 @@ if ($session->has('language')) {
                         <span class="visible-xs-inline-block position-right">Git updates</span>
                         <span class="badge bg-warning-400">9</span>
                     </a>
-                    
+
                     <div class="dropdown-menu dropdown-content">
                         <div class="dropdown-content-heading">
                             Git updates
@@ -95,7 +103,7 @@ if ($session->has('language')) {
                                 <div class="media-left">
                                     <a href="#" class="btn border-warning text-warning btn-flat btn-rounded btn-icon btn-sm"><i class="icon-git-commit"></i></a>
                                 </div>
-                                
+
                                 <div class="media-body">
                                     Add full font overrides for popovers and tooltips
                                     <div class="media-annotation">36 minutes ago</div>
@@ -106,7 +114,7 @@ if ($session->has('language')) {
                                 <div class="media-left">
                                     <a href="#" class="btn border-info text-info btn-flat btn-rounded btn-icon btn-sm"><i class="icon-git-branch"></i></a>
                                 </div>
-                                
+
                                 <div class="media-body">
                                     <a href="#">Chris Arney</a> created a new <span class="text-semibold">Design</span> branch
                                     <div class="media-annotation">2 hours ago</div>
@@ -117,7 +125,7 @@ if ($session->has('language')) {
                                 <div class="media-left">
                                     <a href="#" class="btn border-success text-success btn-flat btn-rounded btn-icon btn-sm"><i class="icon-git-merge"></i></a>
                                 </div>
-                                
+
                                 <div class="media-body">
                                     <a href="#">Eugene Kopyov</a> merged <span class="text-semibold">Master</span> and <span class="text-semibold">Dev</span> branches
                                     <div class="media-annotation">Dec 18, 18:36</div>
@@ -128,7 +136,7 @@ if ($session->has('language')) {
                                 <div class="media-left">
                                     <a href="#" class="btn border-primary text-primary btn-flat btn-rounded btn-icon btn-sm"><i class="icon-git-pull-request"></i></a>
                                 </div>
-                                
+
                                 <div class="media-body">
                                     Have Carousel ignore keyboard events
                                     <div class="media-annotation">Dec 12, 05:46</div>
@@ -159,6 +167,12 @@ if ($session->has('language')) {
                         <li><?= Html::a('<img src="'.Yii::$app->request->baseUrl.'/images/flags/gb.png" alt=""> English',['post/langen', 'language'=>'en'],['class' => 'english']);?></li>
                     </ul>
                 </li>
+                <li class="dropdown"><?= MyNotifications::widget([
+                    'options' => ['class' => 'dropdown nav-notifications'],
+                    'countOptions' => ['class' => 'badge bg-warning-400']
+                ]);?>
+
+                </li>
 
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -166,7 +180,7 @@ if ($session->has('language')) {
                         <span class="visible-xs-inline-block position-right">Messages</span>
                         <span class="badge bg-warning-400">2</span>
                     </a>
-                    
+
                     <div class="dropdown-menu dropdown-content width-350">
                         <div class="dropdown-content-heading">
                             Messages
@@ -204,43 +218,7 @@ if ($session->has('language')) {
                                         <span class="media-annotation pull-right">12:16</span>
                                     </a>
 
-                                    <span class="text-muted">That was something he was unable to do because...</span>
-                                </div>
-                            </li>
-
-                            <li class="media">
-                                <div class="media-left"><img src="<?= Yii::$app->request->baseUrl; ?>/images/placeholder.jpg" class="img-circle img-sm" alt=""></div>
-                                <div class="media-body">
-                                    <a href="#" class="media-heading">
-                                        <span class="text-semibold">Jeremy Victorino</span>
-                                        <span class="media-annotation pull-right">22:48</span>
-                                    </a>
-
-                                    <span class="text-muted">But that would be extremely strained and suspicious...</span>
-                                </div>
-                            </li>
-
-                            <li class="media">
-                                <div class="media-left"><img src="<?= Yii::$app->request->baseUrl; ?>/images/placeholder.jpg" class="img-circle img-sm" alt=""></div>
-                                <div class="media-body">
-                                    <a href="#" class="media-heading">
-                                        <span class="text-semibold">Beatrix Diaz</span>
-                                        <span class="media-annotation pull-right">Tue</span>
-                                    </a>
-
-                                    <span class="text-muted">What a strenuous career it is that I've chosen...</span>
-                                </div>
-                            </li>
-
-                            <li class="media">
-                                <div class="media-left"><img src="<?= Yii::$app->request->baseUrl; ?>/images/placeholder.jpg" class="img-circle img-sm" alt=""></div>
-                                <div class="media-body">
-                                    <a href="#" class="media-heading">
-                                        <span class="text-semibold">Richard Vango</span>
-                                        <span class="media-annotation pull-right">Mon</span>
-                                    </a>
-                                    
-                                    <span class="text-muted">Other travelling salesmen live a life of luxury...</span>
+                                    <span class="text-muted"></span>
                                 </div>
                             </li>
                         </ul>
@@ -405,7 +383,7 @@ if ($session->has('language')) {
                 <!-- Content area -->
                 <div class="col-md-12">
                     <div class="content">
-                    
+
                         <?= $content ?>
 
                     </div>
@@ -418,7 +396,7 @@ if ($session->has('language')) {
                                     <span><?= Yii::t('app', 'Confirm')?></span>
                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                                 </div>
-                                
+
                                 <div class="div-content">
                                     <span class="glyphicon glyphicon-floppy-remove"></span>
                                     <p class="text-center p-content"></p>

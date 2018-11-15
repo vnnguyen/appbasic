@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use \yiicod\mailqueue\models\MailQueueModel;
 
 /**
  * This is the model class for table "mailqueue".
@@ -18,7 +19,7 @@ use Yii;
  * @property string $createDate
  * @property string $updateDate
  */
-class MailQueue extends \yii\db\ActiveRecord
+class MailQueue extends MailQueueModel
 {
     /**
      * @inheritdoc
