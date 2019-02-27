@@ -3,7 +3,7 @@ use yii\helpers\Url;
 // var_dump($t_amount);die();
 ?>
 <!-- <htmlpageheader name="myHTMLHeader1">
-            <img src="<?= '';//Url::to('@web/images/img/img-header.png', true)?>"/> 
+            <img src="<?= '';//Url::to('@web/images/img/img-header.png', true)?>"/>
 </htmlpageheader> -->
 <htmlpagefooter name="MyCustomFooter">
 <div>
@@ -51,7 +51,7 @@ use yii\helpers\Url;
 								<td class="" style=""><?= $mtt['note']?></td>
 							</tr>
 						<?php endforeach ?>
-						
+
 						<tr>
 							<td class=""></td>
 							<td class=""><b>Tổng cộng</b></td>
